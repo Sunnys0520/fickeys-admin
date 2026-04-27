@@ -108,4 +108,50 @@ elif menu == "2. 조직도":
     with col1:
         st.markdown('<div class="group-title">👤 감독 / 코치</div>', unsafe_allow_html=True)
         st.markdown(f'<div style="{box_style}"><b>감독</b><br>최성우</div>', unsafe_allow_html=True)
-        st.markdown(f'<div style="{box_style}"><b>코치</b><br>이한 / 김수영</div>', unsafe_allow_
+        st.markdown(f'<div style="{box_style}"><b>코치</b><br>이한 / 김수영</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>총무</b><br>박윤조</div>', unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown('<div class="group-title">🏠 피키스 (Div3)</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>주장</b><br>장선호</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>부주장</b><br>강인후 / 김창현 / 김상진</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>총무</b><br>김상진</div>', unsafe_allow_html=True)
+
+    with col3:
+        st.markdown('<div class="group-title">🏠 피키스 (Div 8)</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>주장</b><br>박윤조</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>부주장</b><br>강유진 / 장동윤 / 김다열</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>총무</b><br>장동윤</div>', unsafe_allow_html=True)
+        
+    with col4:
+        st.markdown('<div class="group-title">🧊 큐키스</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>주장</b><br>박윤조</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>부주장</b><br>최소이 / 김하린 / 성수지</div>', unsafe_allow_html=True)
+
+# ----------------------------------------------------
+# [메뉴 3] 임원진 R&R
+# ----------------------------------------------------
+elif menu == "3. 임원진 R&R":
+    st.subheader("🤝 임원진 역할 및 책임 (R&R)")
+    
+    rr_url = "https://docs.google.com/spreadsheets/d/1oZAp291Ad1xZ6u5-XfdgY9_DH9Ox_GM27ltbEDY4UBc/export?format=csv&gid=1436566518"
+    
+    try:
+        df_rr = pd.read_csv(rr_url)
+        # 소수점 제거 로직
+        if 'no.' in df_rr.columns:
+            df_rr['no.'] = pd.to_numeric(df_rr['no.'], errors='coerce').astype('Int64').astype(str)
+            df_rr['no.'] = df_rr['no.'].replace('<NA>', '')
+            
+        df_rr = df_rr.fillna("")
+        st.dataframe(df_rr, use_container_width=True, hide_index=True, height=600)
+                                
+    except Exception as e:
+        st.error(f"R&R 데이터를 불러올 수 없습니다. 상세 오류: {e}")
+
+# ----------------------------------------------------
+# [메뉴 4] 입금 내역 관리
+# ----------------------------------------------------
+elif menu == "4. 입금 내역 관리":
+    st.subheader("💰 4. 입금 내역 관리")
+    st.info("여기에 회비 입금 및 지출 내역을 연결할 예정입니다.")
