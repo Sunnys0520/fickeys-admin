@@ -58,18 +58,14 @@ if menu == "1. 회원 명단 및 등번호":
             st.dataframe(df_rest, use_container_width=True, hide_index=True, height=250)
             
         with col_right:
-            st.markdown("#### 🎽 전체 배번(Back Number) 사용 현황")
-            st.markdown("<small>🟡 활동 회원 | 🔵 장기 휴식 회원 | ⚪ 비어있음</small>", unsafe_allow_html=True)
+           st.markdown("#### 🎽 전체 배번(Back Number) 사용 현황")
+            # 🌗 공유 번호 범례 추가!
+            st.markdown("<small>🟡 활동 | 🔵 휴식 | 🌗 활동+휴식 공유 | ⚪ 빈 번호</small>", unsafe_allow_html=True)
 
-            # 등번호 매핑 함수 (열 이름 대신 '순서'로 접근)
             def get_num_map_safe(df):
                 if df.empty or len(df.columns) < 2: return {}
-                
-                # iloc를 사용해 첫 번째 열(0)을 등번호, 두 번째 열(1)을 성명으로 강제 지정
-                # 혹시 열 순서가 [성명, 등번호]라면 아래 숫자를 (1, 0)으로 바꿔야 합니다.
                 temp = df.iloc[:, [0, 1]].copy() 
                 temp.columns = ['num', 'name']
-                
                 temp['num'] = pd.to_numeric(temp['num'], errors='coerce')
                 temp = temp.dropna(subset=['num', 'name'])
                 return dict(zip(temp['num'].astype(int), temp['name']))
@@ -79,7 +75,10 @@ if menu == "1. 회원 명단 및 등번호":
             
             grid_html = '<div class="num-grid">'
             for i in range(1, 100):
-                if i in map_active:
+                if i in map_active and i in map_rest:
+                    # 💡 둘 다 있는 경우: 노랑/파랑 반반 그라데이션 + 이름 두 명 다 표기
+                    grid_html += f'<div class="num-box" style="background: linear-gradient(135deg, #ffd966 50%, #c9daf8 50%); color: #000; font-weight: bold; border: 1px solid #aaa;"><div class="num-label">{i}</div>{map_active[i]}<br><span style="font-size: 11px;">({map_rest[i]})</span></div>'
+                elif i in map_active:
                     grid_html += f'<div class="num-box taken"><div class="num-label">{i}</div>{map_active[i]}</div>'
                 elif i in map_rest:
                     grid_html += f'<div class="num-box resting"><div class="num-label">{i}</div>{map_rest[i]}</div>'
