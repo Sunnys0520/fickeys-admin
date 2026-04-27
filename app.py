@@ -14,7 +14,23 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🏒 피키스 관리 페이지(2026.05)")
+st.markdown("""
+    <style>
+    /* 기본 PC 화면용 제목 크기 */
+    .main-title {
+        font-size: 38px;
+        font-weight: 700;
+        padding-bottom: 20px;
+    }
+    /* 모바일 화면(768px 이하)일 때 제목 크기 줄이기 */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 22px !important; 
+        }
+    }
+    </style>
+    <div class="main-title">🏒 피키스 임원진 관리 페이지</div>
+    """, unsafe_allow_html=True)
 menu = st.sidebar.radio("메뉴 이동", ["1. 회원 명단 및 등번호", "2. 조직도", "3. 임원진 R&R", "4. 입금 내역 관리"])
 
 if menu == "1. 회원 명단 및 등번호":
