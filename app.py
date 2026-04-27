@@ -1,22 +1,13 @@
 import streamlit as st
 import pandas as pd
 
+# 1. 페이지 기본 설정
 st.set_page_config(page_title="피키스 관리자", layout="wide")
 
+# 2. 전체 화면 스타일 및 폰트 크기 설정
 st.markdown("""
     <style>
-    .num-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-top: 15px; }
-    .num-box { border: 1px solid #ddd; border-radius: 6px; padding: 10px 2px; text-align: center; font-size: 14px; }
-    .taken { background-color: #ffd966; color: #000; font-weight: bold; border: 1px solid #f1c232; }
-    .resting { background-color: #c9daf8; color: #000; font-weight: bold; border: 1px solid #a4c2f4; }
-    .empty { background-color: #ffffff; color: #ced4da; }
-    .num-label { font-size: 11px; margin-bottom: 4px; color: #666; }
-    </style>
-    """, unsafe_allow_html=True)
-
-st.markdown("""
-    <style>
-    /* PC 화면: 제목을 더 크고 웅장하게 (기존 38px -> 46px) */
+    /* PC 화면: 제목을 더 크고 웅장하게 */
     .main-title {
         font-size: 46px;
         font-weight: 800;
@@ -25,18 +16,34 @@ st.markdown("""
         line-height: 1.2;
     }
     
-    /* 모바일 화면: 너무 작지 않게 밸런스 조정 (기존 22px -> 30px) */
+    /* 모바일 화면: 너무 작지 않게 밸런스 조정 */
     @media (max-width: 768px) {
         .main-title {
             font-size: 30px !important;
             padding-bottom: 15px;
         }
     }
+
+    .main-box { background-color: #f0f2f6; border-radius: 10px; padding: 20px; text-align: center; border: 2px solid #0e1117; margin-bottom: 10px; }
+    .num-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-top: 15px; }
+    .num-box { border: 1px solid #ddd; border-radius: 6px; padding: 10px 2px; text-align: center; font-size: 14px; box-shadow: 1px 1px 4px rgba(0,0,0,0.05); }
+    
+    .taken { background-color: #ffd966; color: #000; font-weight: bold; border: 1px solid #f1c232; }
+    .resting { background-color: #c9daf8; color: #000; font-weight: bold; border: 1px solid #a4c2f4; }
+    .empty { background-color: #ffffff; color: #ced4da; }
+    .num-label { font-size: 11px; margin-bottom: 4px; color: #666; }
+    .group-title { font-weight: bold; color: #ff4b4b; font-size: 20px; margin-bottom: 15px; text-align: center; }
     </style>
-    <div class="main-title">🏒 피키스 관리 페이지</div>
+    
+    <div class="main-title">🏒 피키스 임원진 관리 페이지</div>
     """, unsafe_allow_html=True)
+
+# 3. 사이드바 메뉴 설정
 menu = st.sidebar.radio("메뉴 이동", ["1. 회원 명단 및 등번호", "2. 조직도", "3. 임원진 R&R", "4. 입금 내역 관리"])
 
+# ----------------------------------------------------
+# [메뉴 1] 회원 명단 및 등번호
+# ----------------------------------------------------
 if menu == "1. 회원 명단 및 등번호":
     st.subheader("📋 1. 회원 정보 및 등번호 현황")
     
@@ -44,7 +51,6 @@ if menu == "1. 회원 명단 및 등번호":
     rest_url = "https://docs.google.com/spreadsheets/d/1oZAp291Ad1xZ6u5-XfdgY9_DH9Ox_GM27ltbEDY4UBc/export?format=csv&gid=1208100019"
     
     try:
-        # 데이터 로드 (header=0으로 제목줄 인식)
         df_active = pd.read_csv(active_url)
         df_rest = pd.read_csv(rest_url)
         
@@ -58,11 +64,10 @@ if menu == "1. 회원 명단 및 등번호":
             st.dataframe(df_rest, use_container_width=True, hide_index=True, height=250)
             
         with col_right:
-           st.markdown("#### 🎽 전체 배번(Back Number) 사용 현황")
-            # 🌗 공유 번호 범례 추가!
-           st.markdown("<small>🟡 활동 | 🔵 휴식 | 🌗 활동+휴식 공유 | ⚪ 빈 번호</small>", unsafe_allow_html=True)
+            st.markdown("#### 🎽 전체 배번(Back Number) 사용 현황")
+            st.markdown("<small>🟡 활동 | 🔵 휴식 | 🌗 활동+휴식 공유 | ⚪ 빈 번호</small>", unsafe_allow_html=True)
 
-           def get_num_map_safe(df):
+            def get_num_map_safe(df):
                 if df.empty or len(df.columns) < 2: return {}
                 temp = df.iloc[:, [0, 1]].copy() 
                 temp.columns = ['num', 'name']
@@ -75,8 +80,8 @@ if menu == "1. 회원 명단 및 등번호":
             
             grid_html = '<div class="num-grid">'
             for i in range(1, 100):
+                # 💡 공유 번호 반반 그라데이션 로직
                 if i in map_active and i in map_rest:
-                    # 💡 둘 다 있는 경우: 노랑/파랑 반반 그라데이션 + 이름 두 명 다 표기
                     grid_html += f'<div class="num-box" style="background: linear-gradient(135deg, #ffd966 50%, #c9daf8 50%); color: #000; font-weight: bold; border: 1px solid #aaa;"><div class="num-label">{i}</div>{map_active[i]}<br><span style="font-size: 11px;">({map_rest[i]})</span></div>'
                 elif i in map_active:
                     grid_html += f'<div class="num-box taken"><div class="num-label">{i}</div>{map_active[i]}</div>'
@@ -89,63 +94,18 @@ if menu == "1. 회원 명단 및 등번호":
             
     except Exception as e:
         st.error(f"데이터 로드 오류: {e}")
+
 # ----------------------------------------------------
-# 2. 조직도 페이지 (이름 직접 입력 방식)
+# [메뉴 2] 조직도
 # ----------------------------------------------------
-elif menu == "2. 조직도":  # <- 메뉴 이름 정확히 일치시킴!
+elif menu == "2. 조직도":
     st.subheader("🏢 임원 조직도")
-    
-    # 최상위: 피키스
     st.markdown('<div class="main-box"><h3>Fickeys (피키스)</h3></div>', unsafe_allow_html=True)
     
-    # 4개 컬럼으로 나누기
     col1, col2, col3, col4 = st.columns(4)
+    box_style = "border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:8px; text-align:center; background-color:white; box-shadow: 1px 1px 3px rgba(0,0,0,0.05);"
     
     with col1:
         st.markdown('<div class="group-title">👤 감독 / 코치</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>감독</b><br>최성우</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>코치</b><br>이한 / 김수영</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>총무</b><br>박윤조</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="group-title">🏠 피키스 (Div3)</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>주장</b><br>장선호</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>부주장</b><br>강인후 / 김창현 / 김상진</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>총무</b><br>김상진</div>', unsafe_allow_html=True)
-
-    with col3:
-        st.markdown('<div class="group-title">🏠 피키스 (Div 8)</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>주장</b><br>박윤조</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>부주장</b><br>강유진 / 장동윤 / 김다열</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>총무</b><br>장동윤</div>', unsafe_allow_html=True)
-        
-    with col4:
-        st.markdown('<div class="group-title">🧊 큐키스</div>', unsafe_allow_html=True) # <- </Div8> 오타 수정
-        st.markdown('<div class="sub-box"><b>주장</b><br>박윤조</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-box"><b>부주장</b><br>최소이 / 김하린 / 성수지</div>', unsafe_allow_html=True)
-# 3. 임원진 R&R
-# ----------------------------------------------------
-elif menu == "3. 임원진 R&R":
-    st.subheader("🤝 임원진 역할 및 책임 (R&R)")
-    
-    rr_url = "https://docs.google.com/spreadsheets/d/1oZAp291Ad1xZ6u5-XfdgY9_DH9Ox_GM27ltbEDY4UBc/export?format=csv&gid=1436566518"
-    
-    try:
-        df_rr = pd.read_csv(rr_url)
-        
-        # 1. 'no.' 열의 '.0' 소수점 제거 로직
-        # 'no.'라는 이름의 열이 있다면 실행
-        if 'no.' in df_rr.columns:
-            # 데이터를 정수형(Int64)으로 강제 변환하여 .0을 떼어내고, 다시 문자열로 바꿈
-            df_rr['no.'] = pd.to_numeric(df_rr['no.'], errors='coerce').astype('Int64').astype(str)
-            # 비어있던 칸이 '<NA>'로 표시되는 것을 깔끔한 빈칸으로 지워줌
-            df_rr['no.'] = df_rr['no.'].replace('<NA>', '')
-            
-        # 2. 나머지 모든 빈칸(NaN)을 깔끔하게 빈칸으로 처리
-        df_rr = df_rr.fillna("")
-        
-        # 3. 화면에 꽉 차는 예쁜 표로 출력
-        st.dataframe(df_rr, use_container_width=True, hide_index=True, height=600)
-                                
-    except Exception as e:
-        st.error(f"R&R 데이터를 불러올 수 없습니다. 상세 오류: {e}")
+        st.markdown(f'<div style="{box_style}"><b>감독</b><br>최성우</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="{box_style}"><b>코치</b><br>이한 / 김수영</div>', unsafe_allow_
