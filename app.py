@@ -16,20 +16,24 @@ st.markdown("""
 
 st.markdown("""
     <style>
-    /* 기본 PC 화면용 제목 크기 */
+    /* PC 화면: 제목을 더 크고 웅장하게 (기존 38px -> 46px) */
     .main-title {
-        font-size: 38px;
-        font-weight: 700;
-        padding-bottom: 20px;
+        font-size: 46px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        padding-bottom: 25px;
+        line-height: 1.2;
     }
-    /* 모바일 화면(768px 이하)일 때 제목 크기 줄이기 */
+    
+    /* 모바일 화면: 너무 작지 않게 밸런스 조정 (기존 22px -> 30px) */
     @media (max-width: 768px) {
         .main-title {
-            font-size: 22px !important; 
+            font-size: 30px !important;
+            padding-bottom: 15px;
         }
     }
     </style>
-    <div class="main-title">🏒 피키스</div>
+    <div class="main-title">🏒 피키스 관리 페이지</div>
     """, unsafe_allow_html=True)
 menu = st.sidebar.radio("메뉴 이동", ["1. 회원 명단 및 등번호", "2. 조직도", "3. 임원진 R&R", "4. 입금 내역 관리"])
 
