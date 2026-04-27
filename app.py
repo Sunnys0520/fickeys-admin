@@ -62,7 +62,7 @@ if menu == "1. 회원 명단 및 등번호":
             # 🌗 공유 번호 범례 추가!
            st.markdown("<small>🟡 활동 | 🔵 휴식 | 🌗 활동+휴식 공유 | ⚪ 빈 번호</small>", unsafe_allow_html=True)
 
-            def get_num_map_safe(df):
+           def get_num_map_safe(df):
                 if df.empty or len(df.columns) < 2: return {}
                 temp = df.iloc[:, [0, 1]].copy() 
                 temp.columns = ['num', 'name']
