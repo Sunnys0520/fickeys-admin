@@ -35,7 +35,7 @@ st.markdown("""
     .group-title { font-weight: bold; color: #ff4b4b; font-size: 20px; margin-bottom: 15px; text-align: center; }
     </style>
     
-    <div class="main-title">🏒 피키스 임원진 관리 페이지</div>
+    <div class="main-title">🏒 피키스 관리 페이지</div>
     """, unsafe_allow_html=True)
 
 # 3. 사이드바 메뉴 설정
