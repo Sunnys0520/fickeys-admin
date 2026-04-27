@@ -29,7 +29,7 @@ st.markdown("""
         }
     }
     </style>
-    <div class="main-title">🏒 피키스 임원진 관리 페이지</div>
+    <div class="main-title">🏒 피키스</div>
     """, unsafe_allow_html=True)
 menu = st.sidebar.radio("메뉴 이동", ["1. 회원 명단 및 등번호", "2. 조직도", "3. 임원진 R&R", "4. 입금 내역 관리"])
 
