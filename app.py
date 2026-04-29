@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import os
 
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="피키스 관리자", layout="wide")
@@ -14,6 +15,7 @@ st.markdown("""
         letter-spacing: -0.5px;
         padding-bottom: 25px;
         line-height: 1.2;
+        margin-top: 10px;
     }
     
     /* 모바일 화면: 너무 작지 않게 밸런스 조정 */
@@ -34,9 +36,26 @@ st.markdown("""
     .num-label { font-size: 11px; margin-bottom: 4px; color: #666; }
     .group-title { font-weight: bold; color: #ff4b4b; font-size: 20px; margin-bottom: 15px; text-align: center; }
     </style>
-    
-    <div class="main-title">🏒 피키스 관리 페이지</div>
     """, unsafe_allow_html=True)
+
+# 🏒 로고와 타이틀을 나란히 배치
+col_logo, col_title = st.columns([1, 9])
+with col_logo:
+    logo_file = None
+    possible_names = ["logo.png", "logo.jpg", "logo.jpeg", "Team Logo.png", "Team Logo.jpg"]
+    
+    for name in possible_names:
+        if os.path.exists(name):
+            logo_file = name
+            break
+            
+    if logo_file:
+        st.image(logo_file, use_container_width=True)
+    else:
+        st.markdown("<div style='font-size: 50px; text-align: center;'>🏒</div>", unsafe_allow_html=True)
+
+with col_title:
+    st.markdown('<div class="main-title">피키스 관리 페이지</div>', unsafe_allow_html=True)
 
 # 3. 사이드바 메뉴 설정
 menu = st.sidebar.radio("메뉴 이동", ["1. 회원 명단 및 등번호", "2. 조직도", "3. 임원진 R&R", "4. 입금 내역 관리"])
